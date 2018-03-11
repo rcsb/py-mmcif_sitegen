@@ -109,8 +109,7 @@ class NeighborFiguresTests(unittest.TestCase):
                                        graphSubTitle=" in dictionary mmcif_pdbx_v40", titleFormat='html',
                                        filterDelivery=True, deliveryType='cc')
 
-        self.__getDictCounts(dictionaryName='mmcif_pdbx_v5_next',
-                             specialFlag=True)
+        self.__getDictCounts(dictionaryName='mmcif_pdbx_v5_next', specialFlag=True)
         self.__testMakeSelectedFigures(dictionaryName='mmcif_pdbx_v5_next', categoryName='entity_poly', neighborCategoryList=['entity_poly_seq', 'atom_site', 'chem_comp', 'entity'],
                                        graphTitle=" <br/>Selected Relationships for Category <b>entity_poly</b>",
                                        graphSubTitle=" in dictionary mmcif_pdbx_v40", titleFormat='html',
@@ -130,7 +129,7 @@ class NeighborFiguresTests(unittest.TestCase):
             dApi = dfu.getApi()
             self.__getDictCounts(dictionaryName=dictionaryName)
             self.__makeCategoryNeighborFigureSelected(categoryName, neighborCategoryList=neighborCategoryList, dApi=dApi, pathInfoObj=pI,
-                                                      graphTitle=graphTitle, graphSubTitle=graphSubTitle, titleFormat=titleFormat, imageFilePath='.',
+                                                      graphTitle=graphTitle, graphSubTitle=graphSubTitle, titleFormat=titleFormat, imageFilePath=os.path.join(HERE, 'test-output'),
                                                       filterDelivery=filterDelivery, deliveryType=deliveryType)
         except Exception as e:
             logger.exception("Failing with %s" % str(e))

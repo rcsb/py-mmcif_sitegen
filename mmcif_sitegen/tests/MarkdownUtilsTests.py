@@ -18,13 +18,11 @@ __license__ = "Apache 2,0"
 
 import sys
 import unittest
-import traceback
 import time
 import os
-import os.path
 
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s')
 logger = logging.getLogger()
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -74,7 +72,7 @@ class MarkdownUtilsTests(unittest.TestCase):
             eList = dApi.getEnumListAltWithDetail(category="pdbx_audit_support", attribute="country")
             logger.debug("Item %s Enum with detail list  %r\n" % ('country', eList))
         except Exception as e:
-            traceback.print_exc(file=sys.stdout)
+            logger.exception("Failing with %s" % str(e))
             self.fail()
 
     def testDumpIndex(self):
@@ -84,13 +82,13 @@ class MarkdownUtilsTests(unittest.TestCase):
             myIo = IoAdapterPy(self.__verbose)
             self.__containerList = myIo.readFile(inputFilePath=self.__pathPdbxV50Dictionary)
             dApi = DictionaryApi(containerList=self.__containerList, consolidate=True, verbose=self.__verbose)
-            dApi.dumpCategoryIndex(fh=sys.stderr)
+            # dApi.dumpCategoryIndex(fh=sys.stderr)
             logger.debug("Index = %r\n" % dApi.getItemNameList('pdbx_nmr_spectral_dim'))
             logger.debug("Index = %r\n" % dApi.getAttributeNameList('pdbx_nmr_spectral_dim'))
             catIndex = dApi.getCategoryIndex()
             logger.debug("Index = %r\n" % catIndex['pdbx_nmr_spectral_dim'])
         except Exception as e:
-            traceback.print_exc(file=sys.stdout)
+            logger.exception("Failing with %s" % str(e))
             self.fail()
 
     def testExtractDictionaryContent(self):
@@ -131,7 +129,7 @@ class MarkdownUtilsTests(unittest.TestCase):
                     #
 
         except Exception as e:
-            traceback.print_exc(file=sys.stdout)
+            logger.exception("Failing with %s" % str(e))
             self.fail()
 
     def __processbounds(self, bList):
@@ -347,7 +345,7 @@ class MarkdownUtilsTests(unittest.TestCase):
                 ofh.write('\n'.join(rL))
 
         except Exception as e:
-            traceback.print_exc(file=sys.stdout)
+            logger.exception("Failing with %s" % str(e))
             self.fail()
 
 

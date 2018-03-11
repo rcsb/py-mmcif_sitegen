@@ -12,7 +12,7 @@ thisPackage = 'mmcif.sitegen'
 requires = ['future', 'six', 'mmcif']
 
 
-with open('mmcif_utils/__init__.py', 'r') as fd:
+with open('mmcif_sitegen/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 

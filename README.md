@@ -23,3 +23,15 @@ is lacking a proper CLI to control an configure general operations.
 Note: The newer Python 3x parser will report issues with non-ascii characters
 in dictionary content.
 
+
+Optionally, run test suite (Python versions 2.7 or 3.6) which generates a site
+in addition to running other tests, using:
+
+```bash
+python setup.py test
+
+or
+
+tox
+
+```
