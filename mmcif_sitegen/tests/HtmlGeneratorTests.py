@@ -9,6 +9,7 @@
 #     3-Oct-2013  jdw implement DictionaryItemCoverage item usage details.
 #     6-Oct-2013  jdw history lists order options added
 #    23-Nov-2013  jdw update to production paths, prune legacy dictionaries and add PDBML support
+#     7-Jul-2018  ep  add leading group for mmcif_ma
 ##
 """
 Tests cases for dictionary HTML rendering.
@@ -105,6 +106,8 @@ class HtmlGeneratorTests(unittest.TestCase):
                     leadingGroupList = ['mdb_group']
                 elif d == 'mmcif_sas':
                     leadingGroupList = ['sas_group']
+                elif d == 'mmcif_ma':
+                    leadingGroupList = ['ma_group']
                 elif d == 'mmcif_nef':
                     leadingGroupList = ['nef_group']
                 elif d == 'mmcif_ihm':

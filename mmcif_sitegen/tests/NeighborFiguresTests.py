@@ -9,6 +9,7 @@
 #   3-Oct-2013 jdw reorganize with registry and coverage classes --
 #   8-Oct-2013 jdw adjust cellpadding for attribute name display -
 #  23-Nov-2013 jdw adjust path for production site and change purge behavior
+#   7-Jul-2018 ep  generate mmcif_ma in testMakeCategoryFiguresFiltered()
 ##
 """
 Tests cases for category neighbor diagram figure generator and related classes.
@@ -165,7 +166,7 @@ class NeighborFiguresTests(unittest.TestCase):
 
         try:
             for d in self.__dictionaryNameList:
-                if d not in ['mmcif_sas', 'mmcif_pdbx_v40', 'mmcif_pdbx_v5_next', 'mmcif_pdbx_v50']:
+                if d not in ['mmcif_sas', 'mmcif_pdbx_v40', 'mmcif_pdbx_v5_next', 'mmcif_pdbx_v50', 'mmcif_ma']:
                     continue
                 logger.debug("\n\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
                 logger.debug("+NeighborFigureTests.testMakeCategoryFiguresAuto() Starting figures generation for dictionary %s\n" % d)

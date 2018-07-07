@@ -5,6 +5,7 @@
 # Version: 0.001
 #
 # Updates:
+#     7-Jul-2018  ep  mmcif_ma and remove generation of mmcif_mdb to registry
 ##
 """
 Classes providing a registry of essential information about known data dictionaries and data item coverage statistics.
@@ -112,7 +113,7 @@ class DictionaryRegistry(object):
         self.__debug = False
         #
         self.__otherDictionaries = ['mmcif_ihm', 'mmcif_em', 'mmcif_nmr-star',
-                                    'mmcif_img', 'mmcif_sas', 'mmcif_std', 'mmcif_mdb',
+                                    'mmcif_img', 'mmcif_sas', 'mmcif_std', 'mmcif_ma',
                                     'mmcif_biosync', 'mmcif_sym', 'mmcif_nef',
                                     ]
 
@@ -281,6 +282,14 @@ class DictionaryRegistry(object):
                 'schema': None
             },
 
+            'mmcif_ma': {
+                'title': 'Model Archive Extension Dictionary',
+                'description': 'The Model Archive dictionary is an extension of the PDBx/mmCIF dictionary. This resource is actively developed and maintained in a GitHub repository available at the <a href="https://github.com/JuergenHaasSIB/modeling_dictionary">Model Archive GitHub repository</a>.  Structural models that are compliant to this extension dictionary can be deposited to the Model Archive at https://www.modelarchive.org.',
+                'developers': 'Model Archive developers',
+                'maintainers': 'Model Archive developers',
+                'schema': None
+            },
+            
 
 
         }
