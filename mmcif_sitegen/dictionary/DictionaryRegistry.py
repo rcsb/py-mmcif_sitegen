@@ -284,7 +284,7 @@ class DictionaryRegistry(object):
 
             'mmcif_ma': {
                 'title': 'Model Archive Extension Dictionary',
-                'description': 'The Model Archive dictionary is an extension of the PDBx/mmCIF dictionary. This resource is actively developed and maintained in a GitHub repository available at the <a href="https://github.com/JuergenHaasSIB/modeling_dictionary">Model Archive GitHub repository</a>.  Structural models that are compliant to this extension dictionary can be deposited to the Model Archive at https://www.modelarchive.org.',
+                'description': 'The Model Archive dictionary is an extension of the PDBx/mmCIF dictionary. This resource is actively developed and maintained in a GitHub repository available at the <a href="https://github.com/ihmwg/MA-dictionary">Model Archive GitHub repository</a>.  Structural models that are compliant to this extension dictionary can be deposited to the Model Archive at https://www.modelarchive.org.',
                 'developers': 'Model Archive developers',
                 'maintainers': 'Model Archive developers',
                 'schema': None
