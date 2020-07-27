@@ -115,6 +115,7 @@ class DictionaryRegistry(object):
         self.__otherDictionaries = ['mmcif_ihm', 'mmcif_em', 'mmcif_nmr-star',
                                     'mmcif_img', 'mmcif_sas', 'mmcif_std', 'mmcif_ma',
                                     'mmcif_biosync', 'mmcif_sym', 'mmcif_nef',
+                                    'mmcif_ndb_ntc',
                                     ]
 
         self.__internalDictionaryNameList = ['mmcif_rcsb_xray', 'mmcif_rcsb_nmr', 'mmcif_pdbx_v32', 'mmcif_pdbx_v31', 'mmcif_ccp4']
@@ -279,6 +280,14 @@ class DictionaryRegistry(object):
                 'description': 'The I/H methods dictionary is an extension of the PDBx/mmCIF dictionary. This dictionary is actively developed and maintained in a github repository available at https://github.com/ihmwg/IHM-dictionary. I/H structural models that are compliant to this extension dictionary can be deposited to the PDB-Dev prototype deposition and archiving system (https://pdb-dev.wwpdb.org).',
                 'developers': 'wwPDB I/H methods task force members',
                 'maintainers': 'wwPDB I/H methods task force members',
+                'schema': None
+            },
+
+            'mmcif_ndb_ntc': {
+                'title': 'NDB NTC Dictionary',
+                'description': 'The NDB NTC dictionary is an extension of the PDBx/mmCIF dictionary for DNATCO conformer analysis of nucleic acids.',
+                'developers': 'Brinda Vallat, Cathy Lawson, Bohdan Schneider, and Jiri Cerny',
+                'maintainers': 'Brinda Vallat',
                 'schema': None
             },
 
