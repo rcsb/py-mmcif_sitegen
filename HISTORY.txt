@@ -1,5 +1,3 @@
 # MMCIF_SITEGEN HISTORY
-
-11-Mar-2018  - Py2->Py3 and refactored for python packaging tools
-
-
+11-Mar-2018  V0.10 - Py2->Py3 and refactored for python packaging tools
+28-Dec-2020  V0.20 - Refactor for new website config, Py39, Azure pipelines
