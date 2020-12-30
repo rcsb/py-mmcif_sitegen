@@ -1,11 +1,13 @@
-## mmCIF Dictionary Site Generator
+# mmCIF Dictionary Site Generator
 
-### Introduction
+[![Build Status](https://dev.azure.com/rcsb/RCSB%20PDB%20Python%20Projects/_apis/build/status/rcsb.py-mmcif_sitegen?branchName=dev-20201227)](https://dev.azure.com/rcsb/RCSB%20PDB%20Python%20Projects/_build/latest?definitionId=30&branchName=dev-20201227)
+
+## Introduction
 
 This module contains a collection of utility classes used to generate
 marked-u content for the [mmCIF Resource Site](mmcif.wwpdb.org)
 
-### Installation
+## Installation
 
 Download the library source software from the project repository:
 
@@ -14,6 +16,7 @@ Download the library source software from the project repository:
 git clone  https://github.com/rcsb/py-mmcif_sitegen.git
 
 ```
+
 This is preliminary port which continues to use test examples to
 to generate site HTML and image content.   This is working
 with new Python framework (Python 3.5 - 3.9) but
@@ -23,6 +26,7 @@ Optionally, run test suite (Python versions 2.7 or 3.6) which generates a site
 in addition to running other tests, using:
 
 ```bash
+
 python setup.py test
 
 or
