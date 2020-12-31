@@ -34,7 +34,7 @@ class DictionaryRegistryTests(unittest.TestCase):
     def setUp(self):
         #
         self.__testData = os.path.join(HERE, "test-data")
-        self.__registryPath = os.path.join(self.__testData, "mmcif_dictionary_registry.json")
+        self.__registryPath = os.path.join(self.__testData, "config", "mmcif_dictionary_registry.json")
         self.__startTime = time.time()
         logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 

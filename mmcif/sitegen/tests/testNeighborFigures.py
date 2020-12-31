@@ -8,7 +8,7 @@
 #
 ##
 """
-Tests cases for category neighbor diagram figure generator and related classes.
+Tests cases for selected category neighbor diagram figure generator.
 """
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
@@ -25,7 +25,6 @@ from mmcif.sitegen.dictionary import __version__
 from mmcif.sitegen.dictionary.DictionaryFileUtils import DictionaryFileUtils
 from mmcif.sitegen.dictionary.DictionaryItemCoverage import DictionaryItemCoverage
 from mmcif.sitegen.dictionary.DictionaryRegistry import DictionaryRegistry
-from mmcif.sitegen.dictionary.HtmlGenerator import HtmlGenerator
 from mmcif.sitegen.dictionary.HtmlPathInfo import HtmlPathInfo
 from mmcif.sitegen.dictionary.NeighborFigures import NeighborFigures
 
@@ -55,11 +54,9 @@ class NeighborFiguresTests(unittest.TestCase):
         #
         # Install path for dictionary text files in the web directory -
         #
-        # self.__pdbxResourcePath = os.path.join(self.__pdbxDocsPath, self.__htmlTopDir, "ascii")
         self.__pdbxResourcePath = os.path.join(self.__testData, "dictionaries")
-        #
         self.__coveragePath = os.path.join(self.__testData, "coverage")
-        self.__registryPath = os.path.join(self.__testData, "mmcif_dictionary_registry.json")
+        self.__registryPath = os.path.join(self.__testData, "config", "mmcif_dictionary_registry.json")
         self.__dR = DictionaryRegistry(self.__registryPath)
         if self.__fullTest:
             self.__dictionaryNameList = self.__dR.getDictionaryNameList()
@@ -214,123 +211,6 @@ class NeighborFiguresTests(unittest.TestCase):
             logger.exception("Failing with %s", str(e))
             self.fail()
 
-    def testMakeCategoryFiguresAuto(self):
-        """Automated rendering of all category-level figures for current dictionary list."""
-
-        try:
-            for dictName in self.__dictionaryNameList:
-                logger.info("Starting figures generation for dictionary %s", dictName)
-                dictPath = os.path.join(self.__pdbxResourcePath, dictName + ".dic")
-                pI = HtmlPathInfo(dictFilePath=dictPath, htmlDocsPath=self.__pdbxDocsPath, htmlTopDirectoryName=self.__htmlTopDir, verbose=self.__verbose)
-
-                dfu = DictionaryFileUtils(dictFilePath=dictPath, verbose=self.__verbose)
-                dApi = dfu.getApi()
-                self.__makeDirectories(pathInfoObj=pI, purge=True)
-
-                categoryNameList = dApi.getCategoryList()
-                self.__makeCategoryNeighborFiguresAuto(categoryNameList=categoryNameList, dApi=dApi, pathInfoObj=pI)
-
-        except Exception as e:
-            logger.exception("Failing with %s", str(e))
-            self.fail()
-
-    def __makeCategoryNeighborFiguresAuto(self, categoryNameList, dApi=None, pathInfoObj=None):
-        """Create neighbor figures for input categories using the input dictionary api and pathInfo objects."""
-        try:
-            # size=".7,.7"
-            size = None
-            #
-            nf = NeighborFigures(dictApiObj=dApi, pathInfoObj=pathInfoObj, pathDot=self.__pathDot, verbose=self.__verbose)
-            for deliveryType in self.__deliveryTypeL:
-                nf.setItemCounts(self.__itemCountD[deliveryType], deliveryType=deliveryType)
-            #
-            dictTitle = dApi.getDictionaryTitle()
-            dictVersion = dApi.getDictionaryVersion()
-
-            figureCount = 0
-            for categoryName in categoryNameList:
-
-                title = " <br/> <br/> Category Relationship Diagram for <b>%s</b> " % categoryName.upper()
-                subTitle = " in dictionary %s version %s " % (dictTitle, dictVersion)
-                ok = nf.makeNeighborFigure(
-                    categoryName,
-                    graphTitle=title,
-                    graphSubTitle=subTitle,
-                    titleFormat="html",
-                    figFormat="svg",
-                    size=size,
-                    maxItems=20,
-                    filterDelivery=False,
-                    deliveryType="archive",
-                )
-                if ok:
-                    figureCount += 1
-                #
-                title = " <br/> <br/> Abbreviated Category Relationship Diagram for <b>%s</b> " % categoryName.upper()
-                subTitle = " in dictionary %s version %s <br/> including only data categories used in current PDB entries." % (dictTitle, dictVersion)
-                ok = nf.makeNeighborFigure(
-                    categoryName, graphTitle=title, graphSubTitle=subTitle, titleFormat="html", figFormat="svg", size=size, maxItems=20, filterDelivery=True, deliveryType="archive"
-                )
-
-                if ok:
-                    figureCount += 1
-
-                if nf.getCategoryUseCount(categoryName, deliveryType="cc") > 0:
-                    title = " <br/> <br/> Abbreviated Category Relationship Diagram for <b>%s</b> " % categoryName.upper()
-                    subTitle = " in dictionary %s version %s <br/> including only data categories used in the chemical reference dictionary." % (dictTitle, dictVersion)
-                    ok = nf.makeNeighborFigure(
-                        categoryName, graphTitle=title, graphSubTitle=subTitle, titleFormat="html", figFormat="svg", size=size, maxItems=20, filterDelivery=True, deliveryType="cc"
-                    )
-                    if ok:
-                        figureCount += 1
-
-                if nf.getCategoryUseCount(categoryName, deliveryType="prd") > 0:
-                    title = " <br/> <br/> Abbreviated Category Relationship Diagram for <b>%s</b> " % categoryName.upper()
-                    subTitle = " in dictionary %s version %s <br/> including only data categories used in the BIRD reference dictionary." % (dictTitle, dictVersion)
-                    ok = nf.makeNeighborFigure(
-                        categoryName, graphTitle=title, graphSubTitle=subTitle, titleFormat="html", figFormat="svg", size=size, maxItems=20, filterDelivery=True, deliveryType="prd"
-                    )
-                    if ok:
-                        figureCount += 1
-
-                if nf.getCategoryUseCount(categoryName, deliveryType="family") > 0:
-                    title = " <br/> <br/> Abbreviated Category Relationship Diagram for <b>%s</b> " % categoryName.upper()
-                    subTitle = " in dictionary %s version %s <br/> including only data categories used in the BIRD family reference dictionary." % (dictTitle, dictVersion)
-                    ok = nf.makeNeighborFigure(
-                        categoryName,
-                        graphTitle=title,
-                        graphSubTitle=subTitle,
-                        titleFormat="html",
-                        figFormat="svg",
-                        size=size,
-                        maxItems=20,
-                        filterDelivery=True,
-                        deliveryType="family",
-                    )
-                    if ok:
-                        figureCount += 1
-
-            logger.debug("%s category count %d figure count %d", dictTitle, len(categoryNameList), figureCount)
-        except Exception as e:
-            logger.exception("Failing with %s", str(e))
-            self.fail()
-
-    def __makeDirectories(self, pathInfoObj=None, purge=True):
-        """Create file system structure for HTML dictionary rendering"""
-
-        try:
-            hg = HtmlGenerator(pathInfoObj=pathInfoObj, verbose=self.__verbose)
-            hg.makeDirectories(purge=purge)
-        except Exception as e:
-            logger.exception("Failing with %s", str(e))
-            self.fail()
-
-
-def suiteNeighborFiguresAutoTests():
-    suiteSelect = unittest.TestSuite()
-    suiteSelect.addTest(NeighborFiguresTests("testMakeCategoryFiguresAuto"))
-    return suiteSelect
-
 
 def suiteNeighborFiguresSelectedTests():
     suiteSelect = unittest.TestSuite()
@@ -340,6 +220,4 @@ def suiteNeighborFiguresSelectedTests():
 
 if __name__ == "__main__":
     mySuite = suiteNeighborFiguresSelectedTests()
-    unittest.TextTestRunner(verbosity=2).run(mySuite)
-    mySuite = suiteNeighborFiguresAutoTests()
     unittest.TextTestRunner(verbosity=2).run(mySuite)

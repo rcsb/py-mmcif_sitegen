@@ -38,11 +38,11 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
     ),
-    # entry_points={
-    #    'console_scripts': [
-    #        'onedep_validate_cli=onedep.cli.validate_cli:run',
-    #    ]
-    # },
+    entry_points={
+        "console_scripts": [
+            "site_generator_cli=mmcif.sitegen.wf.SiteGeneratorExec:main",
+        ]
+    },
     #
     install_requires=["mmcif >= 0.57", "rcsb.utils.io >= 0.95"],
     packages=find_packages(exclude=["mmcif.sitegen.tests", "tests.*"]),
@@ -50,7 +50,6 @@ setup(
         # If any package contains *.md or *.rst ...  files, include them:
         "": ["*.md", "*.rst", "*.txt"],
     },
-    #
     #
     test_suite="mmcif.sitegen.tests",
     tests_require=["tox"],
@@ -61,6 +60,6 @@ setup(
         "test": ["coverage"],
     },
     # Added for
-    command_options={"build_sphinx": {"project": ("setup.py", thisPackage), "version": ("setup.py", version), "release": ("setup.py", version)}},
+    # command_options={"build_sphinx": {"project": ("setup.py", thisPackage), "version": ("setup.py", version), "release": ("setup.py", version)}},
     zip_safe=False,
 )

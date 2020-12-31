@@ -158,7 +158,7 @@ class HtmlGenerator(object):
         self.__contentTypeList = self.__pI.getContentTypeList()
 
     def makeDirectories(self, purge=False):
-        self.__makeDirs(self.__subDirPath, self.__htmlTopPath, purge=purge)
+        return self.__makeDirs(self.__subDirPath, self.__htmlTopPath, purge=purge)
 
     def __makeDirs(self, subDirPath, htmlTopPath, purge=True):
         """internal method to make directory tree for HTML content generation."""

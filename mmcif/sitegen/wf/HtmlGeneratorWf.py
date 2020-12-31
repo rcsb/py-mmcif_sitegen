@@ -1,5 +1,5 @@
 ##
-# File:    HtmlGeneratorTests.py
+# File:    HtmlGeneratorWf.py
 # Author:  jdw
 # Date:    29-Dec-2020
 # Version: 0.001
@@ -7,8 +7,7 @@
 # Updates:
 ##
 """
-Tests cases for dictionary HTML rendering.
-
+Workflow methods for rendering mmCIF dictionaries in HTML
 """
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
@@ -20,7 +19,6 @@ import logging
 import os
 import stat
 import time
-import unittest
 
 from mmcif.sitegen.dictionary import __version__
 from mmcif.sitegen.dictionary.DictionaryFileUtils import DictionaryFileUtils
@@ -33,59 +31,54 @@ from mmcif.sitegen.dictionary.HtmlMarkupUtils import HtmlComponentMarkupUtils
 from mmcif.sitegen.dictionary.HtmlMarkupUtils import HtmlMarkupUtils
 from mmcif.sitegen.dictionary.HtmlPathInfo import HtmlPathInfo
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
-logger = logging.getLogger()
-
-HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(HERE))
+logger = logging.getLogger(__name__)
 
 
-class HtmlGeneratorTests(unittest.TestCase):
-    def setUp(self):
+class HtmlGeneratorWf(object):
+    def __init__(self, websiteGenPath="/var/www/mmcif_website_generated", websiteFileAssetsPath="/var/www/mmcif_website_file_assets", testMode=False):
         self.__verbose = True
+        self.__testMode = testMode
+        # Top path for generated content
+        self.__webGenPath = websiteGenPath
         #
-        # site path details --
-        self.__workPath = os.path.join(HERE, "test-output")
-        self.__testData = os.path.join(HERE, "test-data")
-        self.__webTopPath = os.path.join(self.__workPath, "site")
-        self.__pdbxDocsPath = os.path.join(self.__webTopPath, "mmcif")
-        self.__pdbmlDocsPath = os.path.join(self.__webTopPath, "pdbml")
-        self.__htmlTopDir = "dictionaries"
+        # Source files live in website file assets path -
+        self.__webFileAssetsPath = websiteFileAssetsPath
+        self.__dictTopDir = "dictionaries"
+        self.__pdbxResourcePath = os.path.join(self.__webFileAssetsPath, self.__dictTopDir)
+        # self.__pdbmlResourcePath = os.path.join(self.__webFileAssetsPath, "schema")
+        self.__coveragePath = os.path.join(self.__webFileAssetsPath, "coverage")
+        self.__registryPath = os.path.join(self.__webFileAssetsPath, "config", "mmcif_dictionary_registry.json")
         #
-        # Install path for dictionary text files in the web directory -
-        #
-        # self.__pdbxResourcePath = os.path.join(self.__pdbxDocsPath, self.__htmlTopDir, "ascii")
-        self.__pdbxResourcePath = os.path.join(self.__testData, "dictionaries")
-        self.__coveragePath = os.path.join(self.__testData, "coverage")
-        self.__registryPath = os.path.join(self.__testData, "mmcif_dictionary_registry.json")
         self.__dR = DictionaryRegistry(self.__registryPath)
-        # --
-        self.__pdbmlResourcePath = os.path.join(self.__pdbmlDocsPath, "schema")
-        #
         self.__dictionaryNameList = self.__dR.getDictionaryNameList()
         self.__internalDictionaryNameList = self.__dR.getInternalDictionaryNameList()
-        #
         self.__schemaNameList = self.__dR.getPdbmlSchemaNameList()
         #
         self.__fullDictionaryNameList = []
         self.__fullDictionaryNameList.extend(self.__dictionaryNameList)
         self.__fullDictionaryNameList.extend(self.__internalDictionaryNameList)
-        self.__startTime = time.time()
-        logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+        #
+        if self.__testMode:
+            self.__fullDictionaryNameList = self.__fullDictionaryNameList[:1]
+        self.__startTimeD = {}
 
-    def tearDown(self):
+    def __logBegin(self, taskName="task"):
+        self.__startTimeD[taskName] = time.time()
+        logger.info("Starting %s at %s", taskName, time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+
+    def __logEnd(self, taskName="task"):
         endTime = time.time()
-        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.info("Completed %s at %s (%.4f seconds)", taskName, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTimeD[taskName])
 
-    def testRenderDictionaries(self):
-        """Render dictionaries in HTML --"""
+    def run(self):
+        """Run workflow to render dictionaries in HTML --"""
+        ok = False
         try:
-            self.__renderDownloadList()
+            ok = self.__renderDownloadList()
             for dictName in self.__fullDictionaryNameList:
-                logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                logger.info("Starting dictionary %s", dictName)
+                self.__logBegin(taskName=dictName)
                 dictPath = os.path.join(self.__pdbxResourcePath, dictName + ".dic")
-                self.__makeDirectories(pathDictionary=dictPath)
+                ok = self.__makeDirectories(pathDictionary=dictPath)
                 leadingGroupList = None
                 if dictName == "mmcif_mdb":
                     leadingGroupList = ["mdb_group"]
@@ -98,23 +91,23 @@ class HtmlGeneratorTests(unittest.TestCase):
                 elif dictName == "mmcif_ihm":
                     leadingGroupList = ["ihm_group"]
 
-                self.__renderHtmlDictionary(dictionaryName=dictName, pathDictionary=dictPath, leadingGroupList=leadingGroupList)
-
+                ok1 = self.__renderHtmlDictionary(dictionaryName=dictName, pathDictionary=dictPath, leadingGroupList=leadingGroupList)
+                ok = ok1 and ok
+                self.__logEnd(taskName=dictName)
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
+        return ok
 
     def __makeDirectories(self, pathDictionary):
         """Create file system structure for HTML dictionary rendering"""
-
+        ok = False
         try:
-            pI = HtmlPathInfo(dictFilePath=pathDictionary, htmlDocsPath=self.__pdbxDocsPath, htmlTopDirectoryName=self.__htmlTopDir, verbose=self.__verbose)
-
+            pI = HtmlPathInfo(dictFilePath=pathDictionary, htmlDocsPath=self.__webGenPath, htmlTopDirectoryName=self.__dictTopDir, verbose=self.__verbose)
             hg = HtmlGenerator(pathInfoObj=pI, verbose=self.__verbose)
-            hg.makeDirectories(purge=False)
+            ok = hg.makeDirectories(purge=False)
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
+        return ok
 
     def __writeAnyFile(self, title, subTitle, filePath, htmlContentList, flavor="PDBx"):
         """Render any page using common header and footer.
@@ -215,36 +208,36 @@ class HtmlGeneratorTests(unittest.TestCase):
 
     def __renderDownloadList(self):
         """Create HTML pages for the input dictionary --"""
-
+        ok = False
         try:
-            filePath = os.path.join(self.__pdbxDocsPath, self.__htmlTopDir, "downloads.html")
+            filePath = os.path.join(self.__webGenPath, "downloads", "downloads.html")
             htmlContentList = self.__makePdbxDownloadPage(
                 dictionaryNameList=self.__dictionaryNameList, dictionaryInfoD=self.__dR.get(), dictionaryPath="/dictionaries", schemaPath="/schema"
             )
             self.__writeAnyFile(title="Browse/Download ", subTitle="Dictionaries and Schema", filePath=filePath, htmlContentList=htmlContentList)
             #
-            filePath = os.path.join(self.__pdbxDocsPath, self.__htmlTopDir, "internal-downloads.html")
+            filePath = os.path.join(self.__webGenPath, "downloads", "internal-downloads.html")
             htmlContentList = self.__makePdbxDownloadPage(
                 dictionaryNameList=self.__internalDictionaryNameList, dictionaryInfoD=self.__dR.get(), dictionaryPath="/dictionaries", schemaPath="/schema"
             )
             self.__writeAnyFile(title="Browse/Download ", subTitle="Internal Dictionaries and Schema", filePath=filePath, htmlContentList=htmlContentList)
 
             #
-            filePath = os.path.join(self.__pdbmlResourcePath, "pdbml-downloads.html")
+            filePath = os.path.join(self.__webGenPath, "downloads", "pdbml-downloads.html")
             htmlContentList = self.__makePdbmlDownloadPage(
                 dictionaryNameList=self.__schemaNameList, dictionaryInfoD=self.__dR.get(), dictionaryPath="/dictionaries", schemaPath="/schema"
             )
-            self.__writeAnyFile(title="Browse/Download ", subTitle="PDBML Schema", filePath=filePath, htmlContentList=htmlContentList, flavor="PDBML")
+            ok = self.__writeAnyFile(title="Browse/Download ", subTitle="PDBML Schema", filePath=filePath, htmlContentList=htmlContentList, flavor="PDBML")
 
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
+        return ok
 
     def __renderHtmlDictionary(self, dictionaryName, pathDictionary, leadingGroupList=None):
         """Create HTML pages for the input dictionary --"""
-
+        ok = False
         try:
-            pI = HtmlPathInfo(dictFilePath=pathDictionary, htmlDocsPath=self.__pdbxDocsPath, htmlTopDirectoryName=self.__htmlTopDir, verbose=self.__verbose)
+            pI = HtmlPathInfo(dictFilePath=pathDictionary, htmlDocsPath=self.__webGenPath, htmlTopDirectoryName=self.__dictTopDir, verbose=self.__verbose)
             hg = HtmlGenerator(pathInfoObj=pI, verbose=self.__verbose)
 
             dfu = DictionaryFileUtils(dictFilePath=pathDictionary, verbose=self.__verbose)
@@ -274,7 +267,7 @@ class HtmlGeneratorTests(unittest.TestCase):
                 dS = None
                 aS = None
                 mS = None
-            downloadPath = os.path.join("/", self.__htmlTopDir, "ascii")
+            downloadPath = os.path.join("/", self.__dictTopDir, "ascii")
             #
             # handle history list order -
             order = "reverse"
@@ -315,19 +308,8 @@ class HtmlGeneratorTests(unittest.TestCase):
             #
             pageHtmlList = hcU.makeSupportingDataIndex()
             subTitle = dApi.getDictionaryTitle()
-            hg.writeHtmlFile("index", title="Supporting Data", subTitle=subTitle, contentType="Data", htmlContentList=pageHtmlList)
+            ok = hg.writeHtmlFile("index", title="Supporting Data", subTitle=subTitle, contentType="Data", htmlContentList=pageHtmlList)
 
         except Exception as e:
             logger.exception("Failing with %s", str(e))
-            self.fail()
-
-
-def suiteHtmlGeneratorTests():
-    suiteSelect = unittest.TestSuite()
-    suiteSelect.addTest(HtmlGeneratorTests("testRenderDictionaries"))
-    return suiteSelect
-
-
-if __name__ == "__main__":
-    mySuite = suiteHtmlGeneratorTests()
-    unittest.TextTestRunner(verbosity=2).run(mySuite)
+        return ok

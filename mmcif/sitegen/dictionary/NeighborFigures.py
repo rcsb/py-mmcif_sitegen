@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 class NeighborFigures(object):
     """Utility methods for generating depictions of data category neighbor relationships"""
 
-    def __init__(self, dictApiObj, pathInfoObj=None, pathDot="/opt/local/bin/dot", verbose=False):
+    def __init__(self, dictApiObj, pathInfoObj=None, pathDot="/usr/local/bin/dot", verbose=False):
         """"""
         self.__verbose = verbose
         self.__dApi = dictApiObj
