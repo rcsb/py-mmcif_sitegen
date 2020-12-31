@@ -85,7 +85,7 @@ class NeighborFiguresWf(object):
                 pI = HtmlPathInfo(dictFilePath=dictPath, htmlDocsPath=self.__webGenPath, htmlTopDirectoryName=self.__dictTopDir, verbose=self.__verbose)
                 dfu = DictionaryFileUtils(dictFilePath=dictPath, verbose=self.__verbose)
                 dApi = dfu.getApi()
-                self.__makeDirectories(pathInfoObj=pI, purge=True)
+                self.__makeDirectories(pathInfoObj=pI, purge=False)
                 categoryNameList = dApi.getCategoryList()
                 figureCount = self.__makeCategoryNeighborFiguresAuto(categoryNameList=categoryNameList, dApi=dApi, pathInfoObj=pI)
                 ok1 = figureCount > 0
