@@ -982,12 +982,22 @@ class HtmlContentUtils(object):
         if self.__notNull(altDescription):
             iconText, addClass = self.__getIconAnchorAndClass(contentIconType="deposit-info", cssClass="pull-right")
             self.__html.beginContainer(cType="row")
-            self.__html.beginPanel("Additional Descriptive Information for  Depositors " + iconText, style="panel-default " + addClass, fmt="html")
+            self.__html.beginPanel("Additional Descriptive Information for Depositors " + iconText, style="panel-default " + addClass, fmt="html")
             ht = self.__mU.getFormatted(description, wrapper="pre", fmt="none")
             self.__html.addContent([ht])
             self.__html.endPanel()
             self.__html.endContainer()
-
+        #
+        nxMapping = self.__dApi.getCategoryNxMappingDetails(categoryName)
+        if self.__notNull(nxMapping):
+            iconText, addClass = self.__getIconAnchorAndClass(contentIconType="deposit-info", cssClass="pull-right")
+            self.__html.beginContainer(cType="row")
+            self.__html.beginPanel("NeXus Mapping Details" + iconText, style="panel-default " + addClass, fmt="html")
+            ht = self.__mU.getFormatted(nxMapping, wrapper="pre", fmt="none")
+            self.__html.addContent([ht])
+            self.__html.endPanel()
+            self.__html.endContainer()
+        #
         # -- examples --
         exampleList = self.__dApi.getCategoryExampleList(categoryName)
         htmlList = self.__renderExamples(exampleList, "Category Example", "Category Examples", idSuffix="a")

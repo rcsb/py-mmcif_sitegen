@@ -44,7 +44,7 @@ setup(
         ]
     },
     #
-    install_requires=["mmcif >= 0.57", "rcsb.utils.io >= 0.95"],
+    install_requires=["mmcif >= 0.61", "rcsb.utils.io >= 0.95"],
     packages=find_packages(exclude=["mmcif.sitegen.tests", "tests.*"]),
     package_data={
         # If any package contains *.md or *.rst ...  files, include them:
