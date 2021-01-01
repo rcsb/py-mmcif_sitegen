@@ -286,13 +286,12 @@ class NeighborFigures(object):
             "current": 'BGCOLOR="#f0027f"',
             "adjacent": 'BGCOLOR="#99c49b"',
         }
-
         oList = []
         itemNameList, minItemCount = self.__getOrderedItemNameList(categoryName, fkList=fkList, filterDelivery=filterDelivery, deliveryType=deliveryType)
         itemsToRender = max(minItemCount, maxItems)
-
+        #
         categoryUrl = os.path.join(self.__pI.getContentTypeObjUrl(contentObjName=categoryName, contentType="Categories"))
-
+        logger.debug("Rendering %s categoryUrl %r itemNameList %r itemsToRender %r fkList %r", categoryName, categoryUrl, itemNameList, itemsToRender, fkList)
         if len(itemNameList) > 0:
             iconTypeList = self.__assignItemIconType(itemNameList)
             oList.append('_%s [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" ALIGN="LEFT">' % (categoryName))
@@ -312,6 +311,24 @@ class NeighborFigures(object):
                 tdText = '<FONT POINT-SIZE="%s" FACE="%s">%s</FONT>' % (self.__fontSizeAttribute, self.__fontFace, "... and others ...")
                 oList.append("<tr><td>%s</td></tr>" % tdText)
             oList.append("</TABLE>>];")
+        else:
+            # Placeholder for missing category
+            oList.append('_%s [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" ALIGN="LEFT">' % (categoryName))
+            tdText = '<FONT POINT-SIZE="%s" FACE="%s">%s</FONT>' % (self.__fontSizeCategory, self.__fontFace, categoryName.upper())
+            oList.append('    <tr><td %s CELLPADDING="4"  TARGET="_top">%s</td></tr>' % (colorD[highLight], tdText))
+
+            for itemName in fkList:
+                iconType = "none"
+                itemUrl = os.path.join(self.__pI.getContentTypeObjUrl(contentObjName=itemName, contentType="Items"))
+                attributeName = CifName.attributePart(itemName)
+                tdText = '<FONT POINT-SIZE="%s" FACE="%s">%s</FONT>' % (self.__fontSizeAttribute, self.__fontFace, attributeName)
+                if "key" in iconType:
+                    oList.append('<tr><td %s PORT="__%s" CELLPADDING="4" TARGET="_top" ALIGN="LEFT">%s</td></tr>' % (colorD["key"], attributeName, tdText))
+                else:
+                    oList.append('<tr><td PORT="__%s" CELLPADDING="4" TARGET="_top" ALIGN="LEFT">%s</td></tr>' % (attributeName, tdText))
+
+            oList.append("</TABLE>>];")
+        #
         return oList
 
     def __getRelatedList(self, categoryName, adjacentD):

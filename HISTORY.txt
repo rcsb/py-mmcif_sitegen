@@ -3,3 +3,4 @@
 29-Dec-2020  V0.20 - Refactor for new website deployment, Py39, & Azure pipelines
 30-Dec-2020  V0.21 - Added workflow, cli and related tests
 31-Dec-2020  V0.22 - Avoid directory purge on image generation
+ 1-Jan-2021  V0.23 - Handle missing categories in extension dictionaries within category images.

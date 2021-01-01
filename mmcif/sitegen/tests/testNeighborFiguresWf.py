@@ -5,6 +5,7 @@
 # Version: 0.001
 #
 # Updates:
+#  1-Jan-2021 jdw include placeholders for missing categories with fk relationships
 #
 ##
 """
