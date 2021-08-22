@@ -555,7 +555,7 @@ class NeighborFigures(object):
                 svgfn = os.path.join(imageFilePath, categoryName + "_neighbors_" + deliveryType + ".svg")
         #
         #
-        ofh = open(dotfn, "w", encoding"utf-8")
+        ofh = open(dotfn, "w", encoding="utf-8")
         ofh.write("%s" % "\n".join(dotList))
         ofh.close()
         #
