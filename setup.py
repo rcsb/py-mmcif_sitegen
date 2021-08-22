@@ -11,7 +11,7 @@ packages = []
 thisPackage = "mmcif.sitegen"
 
 
-with open("mmcif/sitegen/dictionary/__init__.py", "r") as fd:
+with open("mmcif/sitegen/dictionary/__init__.py", "r", encoding="utf-8") as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
 
 
@@ -43,7 +43,6 @@ setup(
         "Natural Language :: English",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
     ),
