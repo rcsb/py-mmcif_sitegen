@@ -14,6 +14,14 @@ thisPackage = "mmcif.sitegen"
 with open("mmcif/sitegen/dictionary/__init__.py", "r") as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
 
+
+# Load packages from requirements*.txt
+with open("requirements.txt", "r", encoding="utf-8") as ifh:
+    packagesRequired = [ln.strip() for ln in ifh.readlines()]
+
+with open("README.md", "r", encoding="utf-8") as ifh:
+    longDescription = ifh.read()
+
 if not version:
     raise RuntimeError("Cannot find version information")
 
@@ -21,7 +29,8 @@ setup(
     name=thisPackage,
     version=version,
     description="mmCIF Dictionary Site Generator",
-    long_description="See:  README.md",
+    long_description_content_type="text/markdown",
+    long_description=longDescription,
     author="John Westbrook",
     author_email="john.westbrook@rcsb.org",
     url="http://mmcif.wwpdb.org",
@@ -44,7 +53,7 @@ setup(
         ]
     },
     #
-    install_requires=["mmcif >= 0.61", "rcsb.utils.io >= 0.95"],
+    install_requires=packagesRequired,
     packages=find_packages(exclude=["mmcif.sitegen.tests", "tests.*"]),
     package_data={
         # If any package contains *.md or *.rst ...  files, include them:

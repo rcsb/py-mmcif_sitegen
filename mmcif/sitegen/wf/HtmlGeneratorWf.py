@@ -124,7 +124,7 @@ class HtmlGeneratorWf(object):
                 os.makedirs(pth, 0o755)
             #
             ht = HtmlTemplates()
-            ofh = open(filePath, "w")
+            ofh = open(filePath, "w", encoding"utf-8")
             pageTitle = str(title) + " " + str(subTitle)
             if flavor in ["PDBx"]:
                 ofh.write("%s\n" % ht.getPageHeader(title=pageTitle))

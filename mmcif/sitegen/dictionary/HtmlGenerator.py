@@ -197,7 +197,7 @@ class HtmlGenerator(object):
             logger.debug("writing file %s", filePath)
 
             ht = HtmlTemplates()
-            ofh = open(filePath, "w")
+            ofh = open(filePath, "w", encoding="utf-8")
             pageTitle = str(title) + " " + str(subTitle)
             ofh.write("%s\n" % ht.getPageHeader(title=pageTitle))
             ofh.write("%s\n" % ht.getPageTitle(title, subTitle))
