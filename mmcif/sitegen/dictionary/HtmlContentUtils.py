@@ -1152,7 +1152,7 @@ class HtmlContentUtils(object):
             fS = self.__getItemUsePercent(itemName, deliveryType="archive")
             self.__html.addDescription(termSt="Used in current PDB entries", descriptionSt="Yes, in about %s %s of entries" % (fS, "%"))
         else:
-            self.__html.addDescription(termSt="Used in currrent PDB entries", descriptionSt="No")
+            self.__html.addDescription(termSt="Used in current PDB entries", descriptionSt="No")
 
         if self.__getItemCount(itemName, deliveryType="prd") > 0:
             self.__html.addDescription(termSt="Used in the BIRD dictionary", descriptionSt="Yes")
