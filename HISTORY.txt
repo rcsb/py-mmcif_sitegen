@@ -8,3 +8,4 @@
 10-Jan-2023  V0.25 - Configuration changes to support tox 4, graphviz env variable for testing
 06-Feb-2024  V0.26 - Properly render pdbx_item_description.
 26-Feb-2025  V0.27 - Correct spelling in rendered page
+13-Aug-2025  V0.27.1 - HTML link to rendered images use img instead of iframe

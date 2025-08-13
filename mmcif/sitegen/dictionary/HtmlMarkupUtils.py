@@ -363,7 +363,8 @@ class HtmlComponentMarkupUtils(object):
         #  using object and image  tags was unsatisfactory -
         # self.__oL.append('                       <object type="image/svg+xml" data="%s" border="1"></object>' % imagePath)
         # self.__oL.append('                       <iframe class="my-image-iframe" width="100%s" height="700" src="%s"></iframe>'  % ('%',imagePath))
-        self.__oL.append('                       <iframe class="my-iframe-handle" src="%s"></iframe>' % (imagePath))
+        # self.__oL.append('                       <iframe class="my-iframe-handle" src="%s"></iframe>' % (imagePath))
+        self.__oL.append('                       <img class="my-iframe-handle" src="%s">' % (imagePath))
         self.__oL.append("                  </div>")
         self.__oL.append("            </div>")
         self.__oL.append('            <div class="modal-footer">')
